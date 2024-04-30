@@ -1,0 +1,41 @@
+<div class="list row">
+    <div class="col-md-8">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by Keyword"
+          [(ngModel)]="keyword"
+        />
+        <div class="input-group-append">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="searchKeyword()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Patients List</h4>
+      <ul class="list-group">
+        @for (patient of patients; track patient.id; let i = $index) {
+        <li
+          class="list-group-item"
+          [class.active]="i == currentIndex"
+          (click)="setActivePatient(patient, i)"
+        >
+          {{ patient.firstName }}
+        </li>
+        }
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <app-patient-details
+        [viewMode]="true"
+        [currentPatient]="currentPatient"
+      ></app-patient-details>
+    </div>
+  </div>
