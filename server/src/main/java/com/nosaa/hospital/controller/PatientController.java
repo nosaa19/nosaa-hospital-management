@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -26,7 +27,7 @@ import com.nosaa.hospital.domain.Patient;
 import com.nosaa.hospital.service.PatientService;
 
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class PatientController {
@@ -46,7 +47,6 @@ public class PatientController {
             Page<Patient> pagePatient;
             Pageable paging = PageRequest.of(page, size);
 
-			// call the services
             pagePatient = patientService.findAllPatientByKeyword(keyword, field, paging);
 
 			if (pagePatient.isEmpty()) {
@@ -68,6 +68,18 @@ public class PatientController {
 		}
 	}
 
+    @GetMapping("/patients/{id}")
+    public ResponseEntity<Patient> getTutorialById(@PathVariable("id") long id) {
+		
+        Optional<Patient> patientData = patientService.findPatientById(id);
+        
+		if (patientData.isPresent()) {
+			return new ResponseEntity<>(patientData.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
     @PostMapping("/patients")
 	public ResponseEntity<Patient> setPatient(@RequestBody Patient patient) {
 		try {
@@ -78,7 +90,7 @@ public class PatientController {
 		}
 	}
 
-    @DeleteMapping("/patient/{id}")
+    @DeleteMapping("/patients/{id}")
 	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
 		try {
 			patientService.deletePatient(id);

@@ -43,6 +43,10 @@ public class PatientService {
         return patientPage;
     }
 
+    public Optional<Patient> findPatientById(long id) {
+        return patientRepository.findById(id);
+    }
+
     public Patient upsertPatient(Patient patient) throws Exception {
 
         Optional<Patient> getPatient = patientRepository.findById(patient.getId());
