@@ -69,7 +69,7 @@ public class PatientController {
 	}
 
     @GetMapping("/patients/{id}")
-    public ResponseEntity<Patient> getTutorialById(@PathVariable("id") long id) {
+    public ResponseEntity<Patient> getPatientById(@PathVariable("id") long id) {
 		
         Optional<Patient> patientData = patientService.findPatientById(id);
         
@@ -93,7 +93,7 @@ public class PatientController {
     @DeleteMapping("/patients/{id}")
 	public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
 		try {
-			patientService.deletePatient(id);
+			patientService.deletePatientById(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

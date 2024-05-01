@@ -75,7 +75,7 @@ public class PatientService {
         return upsertPatient;
     }
 
-    public void deletePatient(long id) throws Exception{
+    public void deletePatientById(long id) throws Exception {
         patientRepository.deleteById(id);
     }
 }

@@ -47,13 +47,13 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(long id, String patientId, String firstName, String lastName, LocalDate dob, String addreess, String phoneNumber) {
+    public Patient(long id, String patientId, String firstName, String lastName, LocalDate dob, String address, String phoneNumber) {
         this.id = id;
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
-        this.address = addreess;
+        this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
