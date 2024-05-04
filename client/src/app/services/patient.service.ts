@@ -12,11 +12,11 @@ export class PatientService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(baseUrl);
+  getAll(params: any): Observable<any> {
+    return this.http.get<any>(baseUrl, { params });
   }
 
-  get(id: any): Observable<Patient> {
+  get(id: any): Observable<any> {
     return this.http.get(`${baseUrl}/${id}`);
   }
 
@@ -28,7 +28,7 @@ export class PatientService {
     return this.http.delete(`${baseUrl}/${id}`);
   }
 
-  findByKeyword(keyword: any, field: any): Observable<Patient[]> {
+  findByKeyword(keyword: any, field: any, params: any): Observable<Patient[]> {
     return this.http.get<Patient[]>(`${baseUrl}?keyword=${keyword}&field=${field}`);
   }
 }

@@ -1,41 +1,70 @@
-<div class="list row">
-    <div class="col-md-8">
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search by Keyword"
-          [(ngModel)]="keyword"
-        />
-        <div class="input-group-append">
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            (click)="searchKeyword()"
-          >
-            Search
-          </button>
+<!-- The toolbar of our app -->
+<mat-toolbar color="primary">
+    <span>Hospital Management App</span>
+    <span class="example-spacer"></span>
+    <button mat-raised-button color="accent" (click)="openAddEditEmployeeDialog()">Add Patient</button>
+   </mat-toolbar>
+   <!-- The body of our app -->
+   <div class="main-body">
+       <!-- The filter section -->
+       <div class="row">
+        <div class="col-md-5">
+          <mat-form-field aria-haspopup="outline" [style.width.%]="100">
+            <mat-label>Keyword</mat-label>
+            <input matInput [(ngModel)]="keyword" placeholder="Search by keyword" #input>
+          </mat-form-field>
+        </div>
+        <div class="col-md-5">
+        <app-field-selector></app-field-selector>
+        </div>
+        <div class="col-md-2">
+          <button mat-raised-button color="success" (click)="searchKeyword()"  style="float: right;">Search</button>
         </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <h4>Patients List</h4>
-      <ul class="list-group">
-        @for (patient of patients; track patient.id; let i = $index) {
-        <li
-          class="list-group-item"
-          [class.active]="i == currentIndex"
-          (click)="setActivePatient(patient, i)"
-        >
-          {{ patient.firstName }}
-        </li>
-        }
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <app-patient-details
-        [viewMode]="true"
-        [currentPatient]="currentPatient"
-      ></app-patient-details>
-    </div>
-  </div>
+       <!-- The employee details table -->
+       <div class="table-container">
+         <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="patientId">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> PatientID </th>
+             <td mat-cell *matCellDef="let row"> {{row.patientId}} </td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+             <td mat-cell *matCellDef="let row"> {{row.firstName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+             <td mat-cell *matCellDef="let row"> {{row.lastName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="dob">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> DOB </th>
+             <td mat-cell *matCellDef="let row"> {{row.dob | date}}</td>
+            </ng-container>
+            <ng-container matColumnDef="address">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
+             <td mat-cell *matCellDef="let row"> {{row.address}}</td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+             <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+             <td mat-cell *matCellDef="let row">
+               <span (click)="openEditForm(row)" class="action-icon" style="margin-right: 5px;">
+                 <mat-icon color="primary">edit</mat-icon>
+               </span>
+               <span (click)="deletePatient(row.id)" class="action-icon">
+                 <mat-icon color="warn">delete</mat-icon>
+               </span>
+             </td>
+           </ng-container>
+    
+           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+           <!-- This row will be shown when there is no matching data. -->
+           <tr class="mat-row" *matNoDataRow>
+             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+           </tr>
+         </table>
+    
+         <mat-paginator #paginator [length]="totalData" [pageSizeOptions]="pageSizes" showFirstLastButtons></mat-paginator>
+       </div>
+     </div>

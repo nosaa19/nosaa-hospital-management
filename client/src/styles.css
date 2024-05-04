@@ -1,1 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons'; 
+
+body {
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+  }
+  
+  /*
+   *
+   * Angular Material overrides 
+   * /!\ this can be overwritten by angular material updates
+   */
+  
+  body {
+    .mdc-button.mat-success,
+    .mat-mdc-stroked-button.mat-success {
+      color: #155724;
+    }
+    .mat-mdc-unelevated-button.mat-success:hover,
+    .mat-mdc-raised-button.mat-success:hover {
+      color: #f0fff3;
+      background-color: #1b742f;
+    }
+  
+    .mat-mdc-unelevated-button:not(:disabled, :hover).mat-success,
+    .mat-mdc-raised-button.mat-success,
+    .mat-mdc-fab.mat-success,
+    .mat-mdc-mini-fab.mat-success {
+      color: #f0fff3;
+      background-color: #155724;
+    }
+    .mat-mdc-icon-button.mat-success {
+      color: #155724;
+    }
+  }

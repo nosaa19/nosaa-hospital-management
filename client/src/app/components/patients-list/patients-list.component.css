@@ -1,5 +1,24 @@
-.list {
-    text-align: left;
-    max-width: 750px;
-    margin: auto;
+.example-spacer {
+    flex: 1 1 auto;
 }
+mat-form-field {
+  width: 100%;
+  margin: auto;
+}
+.main-body {
+  max-width: 80%;
+  margin: 20px auto;
+}
+.action-icon:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.mat-button.mat-blue {
+    color: blue;
+ }
+ 
+ .mat-raised-button.mat-blue, .mat-flat-button.mat-blue{
+    background-color: blue;
+    color: white;
+ }
