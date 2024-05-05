@@ -1,8 +1,8 @@
 <mat-form-field>
     <mat-label>Field</mat-label>
-        <mat-select [formControl]="fieldCtrl" placeholder="Field" #singleSelect>
-        <mat-option *ngFor="let field of filteredField | async" [value]="field">
-        {{field}}
+        <mat-select [formControl]="fieldCtrl" placeholder="Field">
+        <mat-option *ngFor="let field of fields" [value]="field">
+        {{field.name}}
         </mat-option>
     </mat-select>
 </mat-form-field>

@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef} from "@angular/core";
 
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 
 import { Patient, PatientTable } from '../../models/patient.model';
 import { PatientService } from '../../services/patient.service';
+import { Field } from "../field-selector/field-selector.component";
+import { PatientDetailsComponent } from '../patient-details/patient-details.component';
 
 @Component({
     selector: 'app-patients-list',
@@ -15,10 +17,14 @@ import { PatientService } from '../../services/patient.service';
 })
 export class PatientsListComponent implements OnInit {
 
+    /* TODO: Page Index Fixing */
+
     // dependency injection
     constructor(
         private patientService: PatientService,
-        private dialog: MatDialog) { }
+        private dialog: MatDialog,
+        private cdr: ChangeDetectorRef 
+    ) { }
 
     displayedColumns: string[] = [
         'patientId',
@@ -42,14 +48,17 @@ export class PatientsListComponent implements OnInit {
 
     dataSource!: MatTableDataSource<any>;
 
-    pageSizes = [3, 5, 7];
+    pageSizes = [5, 10, 15];
 
     getRequestParams(keyword: String, field: String, page: Number, pageSize: Number): any {
         let params: any = {};
     
         if (keyword) {
           params[`keyword`] = keyword;
-          params[`field`] = field;
+        }
+
+        if(field) {
+            params[`field`] = field;
         }
     
         if (page) {
@@ -68,40 +77,20 @@ export class PatientsListComponent implements OnInit {
 
         this.patientService.getAll(params).subscribe({
             next: (res) => {
-              this.dataSource = new MatTableDataSource(res);
-              this.dataSource.sort = this.sort;
-              this.dataSource.paginator = this.paginator;
-              console.log(res);
+                this.dataSource = new MatTableDataSource(res);
+                if(res) {
+                    this.dataSource.sort = this.sort;
+                    this.dataSource.paginator = this.paginator;
+                }
             },
             error: (err) => {
               console.log(err);
             },
-          });
+        });
+    }
 
-        // this.paginator.page
-        // .pipe(
-        //   startWith({}),
-        //   switchMap(() => {
-        //     this.isLoading = true;
-        //     return this.patientService.getAll(params)
-        //         .pipe(catchError(() => EMPTY))
-        //   }),
-        //   map((patientData) => {
-        //     if (patientData == null) return [];
-        //     this.totalData = patientData.total;
-        //     this.isLoading = false;
-        //     return patientData.data;
-        //   })
-        // )
-        // .subscribe((patientData) => {
-
-        //     console.log("AYAM", patientData)
-
-        //   this.patientData = patientData;
-        //   this.dataSource = new MatTableDataSource(this.patientData);
-
-        //   this.dataSource.paginator = this.paginator;    
-        // });
+    fieldChangedHandler(field: Field) {
+        this.field = field.id;
     }
 
     deletePatient(id: any) {
@@ -122,6 +111,8 @@ export class PatientsListComponent implements OnInit {
         }
     }
 
+    pageChanged(event: PageEvent) {}
+
     searchKeyword() {
         this.retrievePatients(
             this.paginator.pageIndex + 1,
@@ -129,17 +120,46 @@ export class PatientsListComponent implements OnInit {
         );
     }
 
-    openAddEditEmployeeDialog() {}
+    openAddEditEmployeeDialog() {
+        const dialogRef = this.dialog.open(PatientDetailsComponent);
+        dialogRef.afterClosed().subscribe({
+        next: (val) => {
+            if (val) {
+                this.retrievePatients(
+                    this.paginator.pageIndex + 1,
+                    this.paginator.pageSize
+                );
+            }
+        },
+        });
+    }
 
     openEditForm(data: any) {
-        console.log(data);
+        const dialogRef = this.dialog.open(PatientDetailsComponent, {
+            data,
+          });
+      
+          dialogRef.afterClosed().subscribe({
+            next: (val) => {
+              if (val) {
+                this.retrievePatients(
+                    this.paginator.pageIndex + 1,
+                    this.paginator.pageSize
+                );
+              }
+            }
+          });
     }
 
     ngOnInit(){
         this.retrievePatients(
-            0,
+            1,
             5
         );
+    }
+
+    ngAfterContentInit() {
+        this.cdr.detectChanges();
     }
     
 }

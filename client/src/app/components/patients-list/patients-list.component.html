@@ -15,7 +15,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-5">
-        <app-field-selector></app-field-selector>
+        <app-field-selector (fieldChanged)="fieldChangedHandler($event)"></app-field-selector>
         </div>
         <div class="col-md-2">
           <button mat-raised-button color="success" (click)="searchKeyword()"  style="float: right;">Search</button>
@@ -65,6 +65,11 @@
            </tr>
          </table>
     
-         <mat-paginator #paginator [length]="totalData" [pageSizeOptions]="pageSizes" showFirstLastButtons></mat-paginator>
+         <mat-paginator #paginator 
+            [length]="totalData"
+            [pageSize]="paginator.pageSize"
+            [pageSizeOptions]="pageSizes" 
+            (page)="pageChanged($event)"
+            showFirstLastButtons></mat-paginator>
        </div>
      </div>

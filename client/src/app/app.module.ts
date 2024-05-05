@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddPatientComponent } from './components/add-patient/add-patient.component';
 import { PatientDetailsComponent } from './components/patient-details/patient-details.component';
 import { PatientsListComponent } from './components/patients-list/patients-list.component';
 import { FieldSelectorComponent } from './components/field-selector/field-selector.component';
@@ -26,11 +25,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 
+import { NgxMatIntlTelInputComponent } from 'ngx-mat-intl-tel-input';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddPatientComponent,
     PatientDetailsComponent,
     PatientsListComponent,
     FieldSelectorComponent,
@@ -56,6 +55,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    NgxMatIntlTelInputComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

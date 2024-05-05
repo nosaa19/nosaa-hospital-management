@@ -1,55 +1,48 @@
-@if (viewMode){
-    @if (currentPatient.id){
-    <h4>Tutorial</h4>
-    <div>
-      <label><strong>Firstname:</strong></label> {{ currentPatient.firstName }}
-    </div>
-    <div>
-      <label><strong>Lastname:</strong></label> {{ currentPatient.lastName }}
-    </div>
-  
-    <a class="badge badge-warning" routerLink="/patients/{{ currentPatient.id }}">
-      Edit
-    </a>
-    } @else {<p>Please click on a Patient...</p>}
-  } @else {
-    @if (currentPatient.id) {
-    <div class="edit-form">
-      <h4>Tutorial</h4>
-      <form>
-        <div class="form-group">
-        <label for="firstName">Firstname</label>
-          <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            [(ngModel)]="currentPatient.firstName"
-            name="firstName"
-          />
-        </div>
-        <div class="form-group">
-          <label for="lastName">Lastname</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lastName"
-            [(ngModel)]="currentPatient.lastName"
-            name="lastName"
-          />
-        </div>
-      </form>
-  
-      <button class="badge badge-danger mr-2" (click)="deletePatient()">
-        Delete
-      </button>
-  
-      <button
-        type="submit"
-        class="badge badge-success mb-2"
-        (click)="updatePatient()">
-        Update
-      </button>
-      <p>{{ message }}</p>
-    </div>
-    } @else {<p>Cannot access this Patient...</p>}
-  }
+<div mat-dialog-title>
+  <h1>{{data ? 'Edit': 'Add'}} Patient Form</h1>
+</div>
+<form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content class="content">
+      <div class="row">
+          <mat-form-field appearance="outline">
+              <mat-label>First name:</mat-label>
+              <input matInput type="text" placeholder="i.e David" formControlName="firstName">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+              <mat-label>Last Name:</mat-label>
+              <input matInput ype="text" placeholder="i.e Smith" formControlName="lastName">
+          </mat-form-field>
+      </div>
+      <div class="row">
+          <mat-form-field appearance="outline">
+              <mat-label>Date of birth:</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="dob">
+              <mat-hint>DD-MM-YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+      </div>
+      <div class="row">
+          <mat-form-field appearance="outline">
+              <mat-label>Address:</mat-label>
+              <input matInput placeholder="A Street" formControlName="address">
+          </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number:</mat-label>
+          <ngx-mat-intl-tel-input
+            [preferredCountries]="['us', 'gb']"
+            [enablePlaceholder]="true"
+            name="phone"
+            describedBy="phoneInput"
+            formControlName="phoneNumber"
+          ></ngx-mat-intl-tel-input>
+        </mat-form-field>
+      </div>
+  </div>
+  <div mat-dialog-actions class="action-btns">
+      <button style="margin: 10px;" mat-raised-button color="accent" type="submit">{{data ? 'Update': 'Save'}}</button>
+      <button mat-raised-button type="button" color="warn" [mat-dialog-close]="false">Cancel</button>
+  </div>
+</form>
