@@ -2,6 +2,7 @@ package com.nosaa.hospital.service;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,7 +64,11 @@ public class PatientService {
             upsertPatient = patientRepository.save(upsertPatient);
         }
         else {
-            upsertPatient.setPatientId(patient.getPatientId());
+
+            Random rnd = new Random();
+            int newPatientId = 100000000 + rnd.nextInt(900000000);
+
+            upsertPatient.setPatientId(Integer.toString(newPatientId));
             upsertPatient.setFirstName(patient.getFirstName());
             upsertPatient.setLastName(patient.getLastName());
             upsertPatient.setDob(patient.getDob());
