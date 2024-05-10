@@ -36,7 +36,7 @@ public class PatientController {
 	PatientService patientService;
 
     @GetMapping("/patients")
-	public ResponseEntity<List<Patient>> getPatientsByParams(
+	public ResponseEntity<Map<String, Object>> getPatientsByParams(
         @RequestParam(required = false) String keyword,
         @RequestParam(defaultValue = "0") int field,
         @RequestParam(defaultValue = "0") int page,
@@ -61,7 +61,7 @@ public class PatientController {
             response.put("totalItems", pagePatient.getTotalElements());
             response.put("totalPages", pagePatient.getTotalPages());
 
-			return new ResponseEntity<>(patients, HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
             e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
