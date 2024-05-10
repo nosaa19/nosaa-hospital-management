@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef} from "@angular/core";
 
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent} from '@angular/material/paginator';
+import { PageEvent} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Patient, PatientTable } from '../../models/patient.model';
+import { PatientTable } from '../../models/patient.model';
 import { PatientService } from '../../services/patient.service';
 import { Field } from "../field-selector/field-selector.component";
 import { PatientDetailsComponent } from '../patient-details/patient-details.component';
@@ -16,8 +16,6 @@ import { PatientDetailsComponent } from '../patient-details/patient-details.comp
     styleUrls: ['./patients-list.component.css'],
 })
 export class PatientsListComponent implements OnInit {
-
-    /* TODO: Page Index Fixing */
 
     // dependency injection
     constructor(
@@ -35,20 +33,18 @@ export class PatientsListComponent implements OnInit {
         'action',
     ];
 
-    patientTable!: PatientTable;
     totalData!: number;
-    patientData!: Patient[];
+    pageIndex: number = 0;
+    pageSize: number = 5;
+    pageSizes: number[] = [5, 10, 15];
     isLoading = false;
 
     keyword = '';
     field = '0';
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
     dataSource!: MatTableDataSource<any>;
-
-    pageSizes = [5, 10, 15];
 
     getRequestParams(keyword: String, field: String, page: Number, pageSize: Number): any {
         let params: any = {};
@@ -72,15 +68,16 @@ export class PatientsListComponent implements OnInit {
         return params;
       }
 
-    retrievePatients(pageNumber: Number, pageSize: Number) {
-        const params = this.getRequestParams(this.keyword, this.field, pageNumber, pageSize);
+    retrievePatients() {
+        const params = this.getRequestParams(this.keyword, this.field, this.pageIndex + 1, this.pageSize);
 
         this.patientService.getAll(params).subscribe({
-            next: (res) => {
-                this.dataSource = new MatTableDataSource(res);
+            next: (res: PatientTable) => {
+                this.dataSource = new MatTableDataSource(res.patients);
                 if(res) {
                     this.dataSource.sort = this.sort;
-                    this.dataSource.paginator = this.paginator;
+                    this.totalData = res.totalItems;
+
                 }
             },
             error: (err) => {
@@ -97,12 +94,9 @@ export class PatientsListComponent implements OnInit {
         let confirm = window.confirm("Are you sure you want to delete this patient?");
         if(confirm) {
           this.patientService.delete(id).subscribe({
-            next: (res) => {
+            next: () => {
               alert('Patient deleted!');
-              this.retrievePatients(
-                this.paginator.pageIndex + 1,
-                this.paginator.pageSize
-              );
+              this.retrievePatients();
             },
             error: (err) => {
               console.log(err);
@@ -111,13 +105,15 @@ export class PatientsListComponent implements OnInit {
         }
     }
 
-    pageChanged(event: PageEvent) {}
+    pageChanged(event: PageEvent) {
+
+      this.pageIndex = event.pageIndex;
+      this.pageSize = event.pageSize;
+      this.retrievePatients();
+    }
 
     searchKeyword() {
-        this.retrievePatients(
-            this.paginator.pageIndex + 1,
-            this.paginator.pageSize
-        );
+        this.retrievePatients();
     }
 
     openAddEditEmployeeDialog() {
@@ -125,10 +121,7 @@ export class PatientsListComponent implements OnInit {
         dialogRef.afterClosed().subscribe({
         next: (val) => {
             if (val) {
-                this.retrievePatients(
-                    this.paginator.pageIndex + 1,
-                    this.paginator.pageSize
-                );
+                this.retrievePatients();
             }
         },
         });
@@ -142,20 +135,14 @@ export class PatientsListComponent implements OnInit {
           dialogRef.afterClosed().subscribe({
             next: (val) => {
               if (val) {
-                this.retrievePatients(
-                    this.paginator.pageIndex + 1,
-                    this.paginator.pageSize
-                );
+                this.retrievePatients();
               }
             }
           });
     }
 
     ngOnInit(){
-        this.retrievePatients(
-            1,
-            5
-        );
+      this.retrievePatients();
     }
 
     ngAfterContentInit() {

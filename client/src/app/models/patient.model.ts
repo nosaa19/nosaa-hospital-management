@@ -1,4 +1,4 @@
-export interface Patient {
+export class Patient {
     id?: any;
     patientId?: string;
     firstName?: string;
@@ -9,9 +9,8 @@ export interface Patient {
 }
 
 export interface PatientTable {
-    data: Patient[];
-    page: number;
-    per_page: number;
-    total: number;
-    total_pages: number;
+    patients: Patient[];
+    currentPage: number;
+    totalItems: number;
+    totalPages: number;
 }
